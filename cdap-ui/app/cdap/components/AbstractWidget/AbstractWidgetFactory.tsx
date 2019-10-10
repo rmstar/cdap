@@ -19,6 +19,7 @@ import { objectQuery } from 'services/helpers';
 import CodeEditorWidget from 'components/AbstractWidget/CodeEditorWidget';
 import CSVWidget from 'components/AbstractWidget/CSVWidget';
 import DatasetSelector from 'components/AbstractWidget/DatasetSelectorWidget';
+import DateTimeWidget from 'components/AbstractWidget/DateTimeWidget';
 import FunctionDropdownAliasWidget from 'components/AbstractWidget/FunctionDropdownAliasWidget';
 import DLPCustomWidget from 'components/AbstractWidget/DLPCustomWidget';
 import GetSchemaWidget from 'components/AbstractWidget/GetSchemaWidget';
@@ -34,6 +35,7 @@ import MultipleValuesWidget from 'components/AbstractWidget/MultipleValuesWidget
 import MultiSelect from 'components/AbstractWidget/FormInputs/MultiSelect';
 import NumberWidget from 'components/AbstractWidget/FormInputs/Number';
 import PasswordWidget from 'components/AbstractWidget/FormInputs/Password';
+import PluginConnectionBrowser from 'components/DataPrepConnections/PluginConnectionBrowser';
 import RadioGroupWidget from 'components/AbstractWidget/RadioGroupWidget';
 import RulesEngineEditor from 'components/AbstractWidget/RulesEngineEditor';
 import SecureKeyPassword from 'components/AbstractWidget/SecureKey/SecureKeyPassword';
@@ -45,7 +47,6 @@ import SqlSelectorWidget from 'components/AbstractWidget/SqlSelectorWidget';
 import TextBox from 'components/AbstractWidget/FormInputs/TextBox';
 import ToggleSwitchWidget from 'components/AbstractWidget/ToggleSwitchWidget';
 import WranglerEditor from 'components/AbstractWidget/WranglerEditor';
-import PluginConnectionBrowser from 'components/DataPrepConnections/PluginConnectionBrowser';
 
 /**
  * Please maintain alphabetical order of the widget factory.
@@ -57,6 +58,7 @@ export const WIDGET_FACTORY = {
   'connection-browser': PluginConnectionBrowser,
   csv: CSVWidget,
   'dataset-selector': DatasetSelector,
+  'date-time-widget': DateTimeWidget,
   'ds-multiplevalues': MultipleValuesWidget,
   dsv: CSVWidget,
   'function-dropdown-with-alias': FunctionDropdownAliasWidget,
