@@ -13,7 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
 */
-var spawn = require('child_process').spawn;
+
+import { spawn } from 'child_process';
+
+// var spawn = require('child_process').spawn;
 var promise = require('q');
 var StringDecoder = require('string_decoder').StringDecoder;
 var decoder = new StringDecoder('utf8');
