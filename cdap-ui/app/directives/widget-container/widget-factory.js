@@ -52,31 +52,6 @@ angular.module(PKG.name + '.commons')
           'ng-trim': 'false'
         }
       },
-      // 'datetime': {
-      //   element: '<my-timestamp-picker></my-timestamp-picker>',
-      //   attributes: {
-      //     'ng-model': 'model',
-      //     'data-label': 'Date'
-      //   }
-      // },
-      'datetime': {
-        element: '<date-time-widget></date-time-widget>',
-        attributes: {
-          'value': 'model',
-          'widget-props': 'myconfig["widget-attributes"]',
-          'on-change': 'onChange',
-          'disabled': 'disabled',
-        }
-      },
-      'daterange': {
-        element: '<date-range-widget></date-range-widget>',
-        attributes: {
-          'value': 'model',
-          'widget-props': 'myconfig["widget-attributes"]',
-          'on-change': 'onChange',
-          'disabled': 'disabled',
-        }
-      },
       'csv': {
         element: '<csv-widget></csv-widget>',
         attributes: {
