@@ -15,12 +15,23 @@
  */
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import TimeRangePicker from 'components/TimeRangePicker';
 import { isDescendant } from 'services/helpers';
 import { Observable } from 'rxjs/Observable';
 import classnames from 'classnames';
 
 export default class ExpandableTimeRange extends Component {
+  static propTypes = {
+    onChange: PropTypes.func,
+    start: PropTypes.number,
+    end: PropTypes.number,
+    onDone: PropTypes.func,
+    inSeconds: PropTypes.bool,
+    showRange: PropTypes.bool,
+    disabled: PropTypes.bool,
+  };
+
   state = {
     start: this.props.inSeconds ? this.props.start * 1000 : this.props.start,
     end: this.props.inSeconds ? this.props.end * 1000 : this.props.end,

@@ -15,20 +15,12 @@
  */
 
 import React, { useState } from 'react';
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import { WithStyles } from '@material-ui/core/styles/withStyles';
 import { IWidgetProps } from 'components/AbstractWidget';
 import ExpandableTimeRange from 'components/TimeRangePicker/ExpandableTimeRange';
 import { DatePickerStyles } from 'components/AbstractWidget/DateTimeWidget';
 
-const styles = () => {
-  return {
-    ...DatePickerStyles(),
-  };
-};
-
-interface IDateRangeWidgetProps extends IWidgetProps<null>, WithStyles<typeof styles> {
-  format?: string; // If we want to be able to specify formats for sending to backend
-}
+interface IDateRangeWidgetProps extends IWidgetProps<null>, WithStyles<typeof DatePickerStyles> {}
 
 const DateRangeWidget: React.FC<IDateRangeWidgetProps> = ({
   value,
@@ -65,6 +57,4 @@ const DateRangeWidget: React.FC<IDateRangeWidgetProps> = ({
   );
 };
 
-const StyledDateRangeWidget = withStyles(styles)(DateRangeWidget);
-
-export default StyledDateRangeWidget;
+export default DateRangeWidget;
