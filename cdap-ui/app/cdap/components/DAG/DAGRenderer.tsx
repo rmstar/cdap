@@ -48,6 +48,7 @@ export interface IInitNodeProps {
   endPointParams?: IEndPointArgs[];
   makeSourceParams?: any;
   makeTargetParams?: any;
+  checkForValidIncomingConnection?: (connObj: any) => boolean;
 }
 
 export interface IRegisterTypesProps {
@@ -217,6 +218,7 @@ class DAGRendererComponent extends React.Component<IDAGRendererProps, any> {
     endPointParams = [],
     makeSourceParams = {},
     makeTargetParams = {},
+    checkForValidIncomingConnection,
   }: IInitNodeProps) => {
     endPointParams.map((endpoint) => {
       const { element, params, referenceParams } = endpoint;
@@ -229,6 +231,9 @@ class DAGRendererComponent extends React.Component<IDAGRendererProps, any> {
       this.state.jsPlumbInstance.makeTarget(nodeId, makeTargetParams);
     }
     this.makeNodeDraggable(nodeId);
+    if (checkForValidIncomingConnection) {
+      this.state.jsPlumbInstance.bind('beforeDrop', checkForValidIncomingConnection);
+    }
   };
 
   private renderChildren() {

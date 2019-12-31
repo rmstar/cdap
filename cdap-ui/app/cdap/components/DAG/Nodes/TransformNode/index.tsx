@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 Cask Data, Inc.
+ * Copyright © 2020 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,10 +18,12 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import { IAbstractNodeProps, AbstractNode } from 'components/DAG/Nodes/AbstractNode';
 import { endpointPaintStyles, genericNodeStyles } from 'components/DAG/Nodes/utilities';
 
-const styles = genericNodeStyles();
-interface ISourceNodeProps extends IAbstractNodeProps<typeof styles> {}
-class SourceNodeComponent extends AbstractNode<ISourceNodeProps> {
-  public type = 'source';
+const styles = genericNodeStyles({
+  border: `1px solid #4586f3`,
+});
+interface ITransformNodeProps extends IAbstractNodeProps<typeof styles> {}
+class TransformNodeComponent extends AbstractNode<ITransformNodeProps> {
+  public type = 'transform';
 
   public getEndpointParams = () => {
     return {
@@ -36,13 +38,7 @@ class SourceNodeComponent extends AbstractNode<ISourceNodeProps> {
       paintStyle: endpointPaintStyles,
     };
   };
-  public checkForValidIncomingConnection = (connObj) => {
-    if (connObj.connection.target.getAttribute('data-node-type') !== 'source') {
-      return true;
-    }
-    return connObj.connection.source.getAttribute('data-node-type') === 'action';
-  };
 }
 
-const SourceNode = withStyles(styles)(SourceNodeComponent);
-export { SourceNode };
+const TransformNode = withStyles(styles)(TransformNodeComponent);
+export { TransformNode };

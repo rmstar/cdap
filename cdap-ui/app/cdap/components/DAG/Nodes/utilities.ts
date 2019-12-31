@@ -2,6 +2,26 @@ import { StyleRules } from '@material-ui/core/styles/withStyles';
 
 const ENDPOINT_RADIUS = 7;
 
+const nodeStyles = (theme, customNodeStyles = {}): StyleRules => {
+  return {
+    root: {
+      height: '100px',
+      width: '200px',
+      border: '1px solid #48c038',
+      display: 'inline-block',
+      position: 'absolute',
+      // TODO
+      // '&:hover': {
+      //   borderWidth: '4px',
+      //   margin: '-2px',
+      //   height: '104px',
+      //   width: '204px',
+      // },
+      ...customNodeStyles,
+    },
+  };
+};
+
 const endpointCircle = (theme): StyleRules => {
   return {
     root: {
@@ -85,4 +105,27 @@ const endpointTargetEndpointParams = (endpointId) => {
   };
 };
 
-export { endpointCircle, endpointCaret, endpointPaintStyles, endpointTargetEndpointParams };
+const genericNodeStyles = (customNodeStyles = {}) => {
+  return (theme): StyleRules => {
+    return {
+      root: {
+        ...nodeStyles(theme, customNodeStyles).root,
+      },
+      endpointCircle: {
+        ...endpointCircle(theme).root,
+      },
+      endpointCaret: {
+        ...endpointCaret(theme).root,
+      },
+    };
+  };
+};
+
+export {
+  endpointCircle,
+  endpointCaret,
+  endpointPaintStyles,
+  endpointTargetEndpointParams,
+  nodeStyles,
+  genericNodeStyles,
+};

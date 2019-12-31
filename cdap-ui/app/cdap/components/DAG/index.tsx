@@ -15,9 +15,11 @@
 */
 
 import * as React from 'react';
+import Button from '@material-ui/core/Button';
 import ThemeWrapper from 'components/ThemeWrapper';
 import { DAGProvider, MyContext } from 'components/DAG/DAGProvider';
 import { SourceNode } from 'components/DAG/Nodes/SourceNode';
+import { TransformNode } from 'components/DAG/Nodes/TransformNode';
 import { DAGRenderer } from 'components/DAG/DAGRenderer';
 import {
   defaultJsPlumbSettings,
@@ -29,6 +31,8 @@ import {
   conditionFalseConnectionStyle,
 } from 'components/DAG/JSPlumbSettings';
 import { fromJS } from 'immutable';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
 
 const registerTypes = {
   connections: {
@@ -43,6 +47,26 @@ const registerTypes = {
 };
 
 export default class DAG extends React.PureComponent {
+  public addNode = (addNode, type) => {
+    addNode(
+      fromJS({
+        config: {
+          label: `Node_${Date.now()
+            .toString()
+            .substring(5)}`,
+        },
+        type,
+        id: `Node_${Date.now()
+          .toString()
+          .substring(5)}`,
+        name: 'Ma Node!',
+      })
+    );
+  };
+  public nodeTypeToComponentMap = {
+    source: SourceNode,
+    transform: TransformNode,
+  };
   public render() {
     return (
       <div className="diagram-container">
@@ -54,25 +78,20 @@ export default class DAG extends React.PureComponent {
                 {(context) => {
                   return (
                     <React.Fragment>
-                      <button
-                        onClick={() =>
-                          context.addNode(
-                            fromJS({
-                              config: {
-                                label: `Node_${Date.now()
-                                  .toString()
-                                  .substring(5)}`,
-                              },
-                              id: `Node_${Date.now()
-                                .toString()
-                                .substring(5)}`,
-                              name: 'Ma Node!',
-                            })
-                          )
-                        }
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={this.addNode.bind(this, context.addNode, 'source')}
                       >
-                        Add Node
-                      </button>
+                        Add Source
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={this.addNode.bind(this, context.addNode, 'transform')}
+                      >
+                        Add Transform
+                      </Button>
                       <DAGRenderer
                         nodes={context.nodes}
                         connections={context.connections}
@@ -84,7 +103,8 @@ export default class DAG extends React.PureComponent {
                       >
                         {context.nodes.map((node, i) => {
                           const nodeObj = node.toJS();
-                          return <SourceNode {...nodeObj} key={i} />;
+                          const Component = this.nodeTypeToComponentMap[nodeObj.type];
+                          return <Component {...nodeObj} key={i} />;
                         })}
                       </DAGRenderer>
                     </React.Fragment>
