@@ -15,8 +15,9 @@
 */
 
 import * as React from 'react';
+import ThemeWrapper from 'components/ThemeWrapper';
 import { DAGProvider, MyContext } from 'components/DAG/DAGProvider';
-import { DefaultNode } from 'components/DAG/Nodes/Default';
+import { SourceNode } from 'components/DAG/Nodes/SourceNode';
 import { DAGRenderer } from 'components/DAG/DAGRenderer';
 import {
   defaultJsPlumbSettings,
@@ -44,54 +45,56 @@ const registerTypes = {
 export default class DAG extends React.PureComponent {
   public render() {
     return (
-      <React.Fragment>
-        <DAGProvider>
-          <div>
-            <h4> Inside DAG Provider </h4>
-            <MyContext.Consumer>
-              {(context) => {
-                return (
-                  <React.Fragment>
-                    <button
-                      onClick={() =>
-                        context.addNode(
-                          fromJS({
-                            config: {
-                              label: `Node_${Date.now()
+      <div className="diagram-container">
+        <ThemeWrapper>
+          <DAGProvider>
+            <div>
+              <h4> Inside DAG Provider </h4>
+              <MyContext.Consumer>
+                {(context) => {
+                  return (
+                    <React.Fragment>
+                      <button
+                        onClick={() =>
+                          context.addNode(
+                            fromJS({
+                              config: {
+                                label: `Node_${Date.now()
+                                  .toString()
+                                  .substring(5)}`,
+                              },
+                              id: `Node_${Date.now()
                                 .toString()
                                 .substring(5)}`,
-                            },
-                            id: `Node_${Date.now()
-                              .toString()
-                              .substring(5)}`,
-                            name: 'Ma Node!',
-                          })
-                        )
-                      }
-                    >
-                      Add Node
-                    </button>
-                    <DAGRenderer
-                      nodes={context.nodes}
-                      connections={context.connections}
-                      onConnection={context.addConnection}
-                      onConnectionDetached={context.removeConnection}
-                      onDeleteNode={context.removeNode}
-                      jsPlumbSettings={defaultJsPlumbSettings}
-                      // registerTypes={registerTypes}
-                    >
-                      {context.nodes.map((node, i) => {
-                        const nodeObj = node.toJS();
-                        return <DefaultNode {...nodeObj} key={i} />;
-                      })}
-                    </DAGRenderer>
-                  </React.Fragment>
-                );
-              }}
-            </MyContext.Consumer>
-          </div>
-        </DAGProvider>
-      </React.Fragment>
+                              name: 'Ma Node!',
+                            })
+                          )
+                        }
+                      >
+                        Add Node
+                      </button>
+                      <DAGRenderer
+                        nodes={context.nodes}
+                        connections={context.connections}
+                        onConnection={context.addConnection}
+                        onConnectionDetached={context.removeConnection}
+                        onDeleteNode={context.removeNode}
+                        jsPlumbSettings={defaultJsPlumbSettings}
+                        // registerTypes={registerTypes}
+                      >
+                        {context.nodes.map((node, i) => {
+                          const nodeObj = node.toJS();
+                          return <SourceNode {...nodeObj} key={i} />;
+                        })}
+                      </DAGRenderer>
+                    </React.Fragment>
+                  );
+                }}
+              </MyContext.Consumer>
+            </div>
+          </DAGProvider>
+        </ThemeWrapper>
+      </div>
     );
   }
 }
