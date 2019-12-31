@@ -126,7 +126,6 @@ export class DAGRenderer extends React.Component<IDAGRendererProps, any> {
     if (!this.state.jsPlumbInstance) {
       return;
     }
-    this.state.jsPlumbInstance.deleteEveryConnection();
     this.props.connections.forEach((connObj) => {
       const newConnObj = this.getNewConnectionObj(connObj).toJSON();
       if (
@@ -179,7 +178,6 @@ export class DAGRenderer extends React.Component<IDAGRendererProps, any> {
       this.state.jsPlumbInstance.makeTarget(nodeId, makeTargetParams);
     }
     this.makeNodeDraggable(nodeId);
-    this.makeConnections();
   };
 
   private renderChildren() {
@@ -199,7 +197,7 @@ export class DAGRenderer extends React.Component<IDAGRendererProps, any> {
       }
 
       // huh.. This is not how it should be.
-      return React.cloneElement(child as React.ReactElement<DefaultNode>, {
+      return React.cloneElement(child as React.ReactElement, {
         ...child.props,
         id: child.props.id,
         initNode: this.initNode,
