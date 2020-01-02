@@ -48,7 +48,7 @@ export interface IInitNodeProps {
   endPointParams?: IEndPointArgs[];
   makeSourceParams?: any;
   makeTargetParams?: any;
-  checkForValidIncomingConnection?: (connObj: any) => boolean;
+  validConnectionHandler?: IValidationConnectionListener;
 }
 
 export interface IRegisterTypesProps {
@@ -75,11 +75,24 @@ interface IDAGRendererProps extends WithStyles<typeof styles> {
   registerTypes?: IRegisterTypesProps;
 }
 
+interface IConnectionObjWithDOM {
+  source: HTMLElement;
+  target: HTMLElement;
+}
+
+interface IConnectionObj extends IConnection {
+  connection: IConnectionObjWithDOM;
+}
+
+type IValidationConnectionListener = (connectionObj: IConnectionObj) => boolean;
+
 class DAGRendererComponent extends React.Component<IDAGRendererProps, any> {
   public state = {
     isJsPlumbInstanceCreated: false,
     jsPlumbInstance: jsPlumb.getInstance(this.props.jsPlumbSettings || {}),
   };
+
+  private validConnectionListeners: IValidationConnectionListener[] = [];
 
   public componentDidMount() {
     jsPlumb.ready(() => {
@@ -101,6 +114,7 @@ class DAGRendererComponent extends React.Component<IDAGRendererProps, any> {
         const newConnObj = this.getNewConnectionObj(fromJS(connObj));
         this.props.onConnectionDetached(newConnObj);
       });
+      jsPlumbInstance.bind('beforeDrop', this.checkForValidIncomingConnection);
       this.registerTypes(jsPlumbInstance);
       this.setState({
         isJsPlumbInstanceCreated: true,
@@ -218,7 +232,7 @@ class DAGRendererComponent extends React.Component<IDAGRendererProps, any> {
     endPointParams = [],
     makeSourceParams = {},
     makeTargetParams = {},
-    checkForValidIncomingConnection,
+    validConnectionHandler,
   }: IInitNodeProps) => {
     endPointParams.map((endpoint) => {
       const { element, params, referenceParams } = endpoint;
@@ -231,9 +245,13 @@ class DAGRendererComponent extends React.Component<IDAGRendererProps, any> {
       this.state.jsPlumbInstance.makeTarget(nodeId, makeTargetParams);
     }
     this.makeNodeDraggable(nodeId);
-    if (checkForValidIncomingConnection) {
-      this.state.jsPlumbInstance.bind('beforeDrop', checkForValidIncomingConnection);
+    if (validConnectionHandler) {
+      this.validConnectionListeners.push(validConnectionHandler);
     }
+  };
+
+  private checkForValidIncomingConnection = (connObj: IConnectionObj) => {
+    return this.validConnectionListeners.reduce((prev, curr) => prev && curr(connObj), true);
   };
 
   private renderChildren() {
