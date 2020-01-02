@@ -7,9 +7,13 @@ const nodeStyles = (theme, customNodeStyles = {}): StyleRules => {
     root: {
       height: '100px',
       width: '200px',
-      border: '1px solid #48c038',
-      display: 'inline-block',
+      border: '1px solid black',
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
       position: 'absolute',
+      overflow: 'visible',
+      borderRadius: '4px',
       // TODO
       // '&:hover': {
       //   borderWidth: '4px',
@@ -19,6 +23,7 @@ const nodeStyles = (theme, customNodeStyles = {}): StyleRules => {
       // },
       ...customNodeStyles,
     },
+    focusVisible: {},
   };
 };
 
@@ -30,8 +35,6 @@ const endpointCircle = (theme): StyleRules => {
       backgroundColor: theme.palette.bluegrey[100],
       borderRadius: '100%',
       position: 'absolute',
-      right: `-${ENDPOINT_RADIUS}px`,
-      top: '41px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -45,6 +48,9 @@ const endpointCircle = (theme): StyleRules => {
         },
         '& *': {
           visibility: 'hidden',
+        },
+        '& [data-type="endpoint-label"]': {
+          visibility: 'visible',
         },
       },
       '&:before': {
@@ -66,6 +72,42 @@ const endpointCircle = (theme): StyleRules => {
         display: 'none',
       },
     },
+    bottomEndpointCircle: {
+      '&:before': {
+        left: '6px',
+        top: '100%',
+        borderBottom: 'none',
+        borderLeft: `2px solid ${theme.palette.blue[300]}`,
+        height: '5px',
+      },
+      '&:after': {
+        content: '""',
+        width: 0,
+        height: 0,
+        borderBottom: '7px solid transparent',
+        borderTop: `7px solid ${theme.palette.blue[300]}`,
+        borderLeft: '7px solid transparent',
+        borderRight: '7px solid transparent',
+        transform: 'translate(-4px, 19px)',
+      },
+    },
+    bottomEndpointLabel: {
+      position: 'absolute',
+      top: '-18px',
+      color: theme.palette.grey[300],
+    },
+    regularEndpointCircle: {
+      right: `-${ENDPOINT_RADIUS}px`,
+      top: '41px',
+    },
+    alertEndpointCircle: {
+      bottom: `-${ENDPOINT_RADIUS}px`,
+      left: `${ENDPOINT_RADIUS * 2}px`,
+    },
+    errorEndpointCircle: {
+      bottom: `-${ENDPOINT_RADIUS}px`,
+      left: `${ENDPOINT_RADIUS * 7}px`,
+    },
   };
 };
 const endpointCaret = (theme): StyleRules => ({
@@ -79,6 +121,16 @@ const endpointCaret = (theme): StyleRules => ({
   },
 });
 
+const bottomEndpointCaret = (): StyleRules => ({
+  root: {
+    width: 0,
+    height: 0,
+    borderLeft: '4px solid transparent',
+    borderRight: '4px solid transparent',
+    borderTop: '7px solid #bac0d6',
+    transform: 'translateY(2px)',
+  },
+});
 const endpointPaintStyles = {
   width: 20,
   height: 20,
@@ -91,7 +143,7 @@ const endpointPaintStyles = {
   },
   fill: 'black',
   lineWidth: 3,
-  radius: 5,
+  radius: 10,
   stroke: 'black',
 };
 
@@ -107,15 +159,34 @@ const endpointTargetEndpointParams = (endpointId) => {
 
 const genericNodeStyles = (customNodeStyles = {}) => {
   return (theme): StyleRules => {
+    const endpointCircleStyles = endpointCircle(theme);
     return {
       root: {
         ...nodeStyles(theme, customNodeStyles).root,
       },
       endpointCircle: {
-        ...endpointCircle(theme).root,
+        ...endpointCircleStyles.root,
+      },
+      bottomEndpointCircle: {
+        ...endpointCircleStyles.bottomEndpointCircle,
+      },
+      bottomEndpointLabel: {
+        ...endpointCircleStyles.bottomEndpointLabel,
+      },
+      regularEndpointCircle: {
+        ...endpointCircleStyles.regularEndpointCircle,
+      },
+      alertEndpointCircle: {
+        ...endpointCircleStyles.alertEndpointCircle,
+      },
+      errorEndpointCircle: {
+        ...endpointCircleStyles.errorEndpointCircle,
       },
       endpointCaret: {
         ...endpointCaret(theme).root,
+      },
+      bottomEndpointCaret: {
+        ...bottomEndpointCaret().root,
       },
     };
   };
