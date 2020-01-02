@@ -20,6 +20,9 @@ import ThemeWrapper from 'components/ThemeWrapper';
 import { DAGProvider, MyContext } from 'components/DAG/DAGProvider';
 import { SourceNode } from 'components/DAG/Nodes/SourceNode';
 import { TransformNode } from 'components/DAG/Nodes/TransformNode';
+import { SinkNode } from 'components/DAG/Nodes/SinkNode';
+import { AlertPublisherNode } from 'components/DAG/Nodes/AlertPublisherNode';
+import { ErrorNode } from 'components/DAG/Nodes/ErrorNode';
 import { DAGRenderer } from 'components/DAG/DAGRenderer';
 import {
   defaultJsPlumbSettings,
@@ -31,8 +34,7 @@ import {
   conditionFalseConnectionStyle,
 } from 'components/DAG/JSPlumbSettings';
 import { fromJS } from 'immutable';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 const registerTypes = {
   connections: {
@@ -46,14 +48,43 @@ const registerTypes = {
   endpoints: {},
 };
 
-export default class DAG extends React.PureComponent {
-  public addNode = (addNode, type) => {
+const styles = () => {
+  return {
+    root: {
+      margin: '20px',
+    },
+    btnStyles: {
+      color: 'white',
+      margin: '0 5px',
+    },
+    sourceBtn: {
+      backgroundColor: '#48c038',
+    },
+    transformBtn: {
+      backgroundColor: '#4586f3',
+    },
+    sinkBtn: {
+      backgroundColor: '#8367df',
+    },
+    alertBtn: {
+      backgroundColor: '#ffba01',
+    },
+    errorBtn: {
+      backgroundColor: '#d40001',
+    },
+  };
+};
+interface IDAGProps extends WithStyles<typeof styles> {}
+class DAG extends React.PureComponent<IDAGProps> {
+  public addNode = (addNode, type, showAlertAndError) => {
     addNode(
       fromJS({
         config: {
           label: `Node_${Date.now()
             .toString()
             .substring(5)}`,
+          showAlert: showAlertAndError,
+          showError: showAlertAndError,
         },
         type,
         id: `Node_${Date.now()
@@ -66,32 +97,69 @@ export default class DAG extends React.PureComponent {
   public nodeTypeToComponentMap = {
     source: SourceNode,
     transform: TransformNode,
+    sink: SinkNode,
+    alertpublisher: AlertPublisherNode,
+    error: ErrorNode,
   };
+  public getButton = (type, label, className, addNode, showAlertAndError = false) => (
+    <Button
+      className={className}
+      variant="contained"
+      color="primary"
+      onClick={this.addNode.bind(this, addNode, type, showAlertAndError)}
+    >
+      {label}
+    </Button>
+  );
   public render() {
+    const { classes } = this.props;
     return (
       <div className="diagram-container">
         <ThemeWrapper>
           <DAGProvider>
-            <div>
-              <h4> Inside DAG Provider </h4>
+            <div className={classes.root}>
+              <h4> DAG Prototype </h4>
               <MyContext.Consumer>
                 {(context) => {
                   return (
                     <React.Fragment>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.addNode.bind(this, context.addNode, 'source')}
-                      >
-                        Add Source
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.addNode.bind(this, context.addNode, 'transform')}
-                      >
-                        Add Transform
-                      </Button>
+                      {this.getButton(
+                        'source',
+                        'Add Source',
+                        `${classes.btnStyles} ${classes.sourceBtn}`,
+                        context.addNode
+                      )}
+                      {this.getButton(
+                        'transform',
+                        'Add Transform',
+                        `${classes.btnStyles} ${classes.transformBtn}`,
+                        context.addNode
+                      )}
+                      {this.getButton(
+                        'transform',
+                        'Add Transform (w/alert & error)',
+                        `${classes.btnStyles} ${classes.transformBtn}`,
+                        context.addNode,
+                        true
+                      )}
+                      {this.getButton(
+                        'sink',
+                        'Add Sink',
+                        `${classes.btnStyles} ${classes.sinkBtn}`,
+                        context.addNode
+                      )}
+                      {this.getButton(
+                        'alertpublisher',
+                        'Add Alert',
+                        `${classes.btnStyles} ${classes.alertBtn}`,
+                        context.addNode
+                      )}
+                      {this.getButton(
+                        'error',
+                        'Add Error',
+                        `${classes.btnStyles} ${classes.errorBtn}`,
+                        context.addNode
+                      )}
                       <DAGRenderer
                         nodes={context.nodes}
                         connections={context.connections}
@@ -118,3 +186,6 @@ export default class DAG extends React.PureComponent {
     );
   }
 }
+
+const StyledDAG = withStyles(styles)(DAG);
+export default StyledDAG;
