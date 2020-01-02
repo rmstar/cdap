@@ -16,26 +16,18 @@
 
 import withStyles from '@material-ui/core/styles/withStyles';
 import { IAbstractNodeProps, AbstractNode } from 'components/DAG/Nodes/AbstractNode';
-import { endpointPaintStyles, genericNodeStyles } from 'components/DAG/Nodes/utilities';
+import { genericNodeStyles } from 'components/DAG/Nodes/utilities';
 
-const styles = genericNodeStyles();
+const styles = genericNodeStyles({
+  border: '1px solid #48c038',
+  '&.drag-hover': {
+    backgroundColor: 'rgba(72, 192, 56, 0.1)',
+  },
+});
 interface ISourceNodeProps extends IAbstractNodeProps<typeof styles> {}
 class SourceNodeComponent extends AbstractNode<ISourceNodeProps> {
   public type = 'source';
 
-  public getEndpointParams = () => {
-    return {
-      isSource: true,
-      maxConnections: -1, // -1 means unlimited connections
-      Endpoint: 'Dot',
-      EndpointStyle: { radius: 10 },
-      Connector: [
-        'Flowchart',
-        { stub: [10, 15], alwaysRespectStubs: true, cornerRadius: 20, midpoint: 0.2 },
-      ],
-      paintStyle: endpointPaintStyles,
-    };
-  };
   public checkForValidIncomingConnection = (connObj) => {
     if (connObj.connection.target.getAttribute('data-node-type') !== 'source') {
       return true;
