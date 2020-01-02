@@ -18,6 +18,7 @@ import { combineReducers, createStore, Store as InterfaceStore } from 'redux';
 import NamespaceActions from './NamespaceActions';
 import { composeEnhancers, objectQuery, isNilOrEmpty } from 'services/helpers';
 import { SYSTEM_NAMESPACE } from 'services/global-constants';
+import { MyNamespaceApi } from 'api/namespace';
 import { IAction } from 'services/redux-helpers';
 
 export interface INamespace {
@@ -100,5 +101,14 @@ const getCurrentNamespace = () => {
   return namespace;
 };
 
+const isValidNamespace = async (namespace: string) => {
+  if (namespace) {
+    const validNamespaces = await MyNamespaceApi.list().toPromise();
+    const validNs = validNamespaces.find((ns: INamespace) => ns.name === namespace);
+    return validNs;
+  }
+  return false;
+};
+
 export default NamespaceStore;
-export { getCurrentNamespace };
+export { getCurrentNamespace, isValidNamespace };

@@ -250,6 +250,35 @@ angular
     var activeThemeClass = caskTheme.getClassName();
     var dataSource = new MyCDAPDataSource($scope);
     getVersion();
+    this.eventEmitter = window.CaskCommon.ee(window.CaskCommon.ee);
+    this.pageLevelError = null;
+    const {globalEvents} = window.CaskCommon;
+
+    const handlePageLevelError = (error) => {
+      // This function parses receiveing error messages and converts it to a
+      // format that page level error supports
+      let message = null;
+      let errorCode = null;
+
+      if (error.data) {
+        message = error.data;
+      } else if (typeof error.response === 'string') {
+        message = error.response;
+      }
+
+      if (error.statusCode) {
+        errorCode = error.statusCode;
+      } else {
+        // If we don't know about the error type, showing a 500 level error
+        errorCode = 500;
+      }
+      return {errorCode, message};
+    };
+
+    this.eventEmitter.on(globalEvents.PAGE_LEVEL_ERROR, (error) => {
+      this.pageLevelError = handlePageLevelError(error);
+    });
+
 
     $scope.copyrightYear = new Date().getFullYear();
 

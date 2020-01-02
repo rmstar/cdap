@@ -16,8 +16,9 @@
 
 import React, { Component } from 'react';
 import find from 'lodash/find';
-import NamespaceStore from 'services/NamespaceStore';
+import NamespaceStore, { isValidNamespace } from 'services/NamespaceStore';
 import { Redirect } from 'react-router-dom';
+import globalEvents from 'services/global-events';
 
 export default class RouteToNamespace extends Component {
   constructor(props) {
@@ -40,7 +41,7 @@ export default class RouteToNamespace extends Component {
     return find(list, { name: name });
   }
 
-  setNamespace() {
+  async setNamespace() {
     let list = NamespaceStore.getState().namespaces;
 
     if (!list || list.length === 0) {
@@ -76,6 +77,14 @@ export default class RouteToNamespace extends Component {
     }
 
     localStorage.setItem('DefaultNamespace', selectedNamespace);
+    const isvalid = await isValidNamespace(selectedNamespace);
+
+    if (!isvalid) {
+      this.eventEmitter.emit(globalEvents.PAGE_LEVEL_ERROR, {
+        statusCode: 404,
+        data: `Namespace ${selectedNamespace} does not exist.`,
+      });
+    }
     this.setState({ selectedNamespace });
   }
 

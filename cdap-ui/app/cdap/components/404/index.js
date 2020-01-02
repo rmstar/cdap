@@ -17,56 +17,69 @@
 import PropTypes from 'prop-types';
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Router, Link } from 'react-router-dom';
 import NamespaceStore from 'services/NamespaceStore';
 import isEmpty from 'lodash/isEmpty';
 import T from 'i18n-react';
+import If from 'components/If';
+import history from 'services/history';
+
 require('./404.scss');
 
 const I18N_PREFIX = 'features.Page404';
-export default function Page404({ entityName, entityType, children }) {
-  let namespace = NamespaceStore.getState().selectedNamespace;
+
+export default function Page404({ entityName, entityType, children, message }) {
+  const namespace = NamespaceStore.getState().selectedNamespace;
   return (
-    <div className="page-not-found">
-      <h1 className="error-main-title">{T.translate(`${I18N_PREFIX}.mainTitle`)}</h1>
-      <h1>
-        <strong>
-          {isEmpty(entityType) || isEmpty(entityName) ? (
-            T.translate(`${I18N_PREFIX}.genericMessage`)
-          ) : (
-            <span>{T.translate(`${I18N_PREFIX}.entityMessage`, { entityType, entityName })}</span>
-          )}
-        </strong>
-      </h1>
-      {children ? (
-        children
-      ) : (
-        <div className="message-section">
-          <h4>
-            <strong>{T.translate(`${I18N_PREFIX}.subtitleMessage1`)}</strong>
-          </h4>
-          <div className="navigation-section">
-            <div>
-              {T.translate(`${I18N_PREFIX}.subtitleMessage2`)}
-              <Link to={`/ns/${namespace}/`}>{T.translate(`${I18N_PREFIX}.overviewLabel`)}</Link>
-            </div>
-            <div>
-              {T.translate(`${I18N_PREFIX}.manageLabel`)}
-              <a
-                href={window.getHydratorUrl({
-                  stateName: 'hydrator.list',
-                  stateParams: {
-                    namespace,
-                  },
-                })}
-              >
-                {T.translate(`${I18N_PREFIX}.pipelinesMessage`)}
-              </a>
+    <Router history={history}>
+      <div className="page-not-found">
+        <h1 className="error-main-title">{T.translate(`${I18N_PREFIX}.mainTitle`)}</h1>
+        <h1>
+          <strong>
+            <If condition={typeof message === 'string'}>
+              <span data-cy="page-404-error-msg">{message}</span>
+            </If>
+            <If condition={!message}>
+              {isEmpty(entityType) || isEmpty(entityName) ? (
+                T.translate(`${I18N_PREFIX}.genericMessage`)
+              ) : (
+                <span>
+                  {T.translate(`${I18N_PREFIX}.entityMessage`, { entityType, entityName })}
+                </span>
+              )}
+            </If>
+          </strong>
+        </h1>
+        {children ? (
+          children
+        ) : (
+          <div className="message-section">
+            <h4>
+              <strong>{T.translate(`${I18N_PREFIX}.subtitleMessage1`)}</strong>
+            </h4>
+            <div className="navigation-section">
+              <div>
+                {T.translate(`${I18N_PREFIX}.subtitleMessage2`)}
+                <Link to={`/ns/${namespace}/`}>{T.translate(`${I18N_PREFIX}.overviewLabel`)}</Link>
+              </div>
+              <div>
+                {T.translate(`${I18N_PREFIX}.manageLabel`)}
+                <a
+                  href={window.getHydratorUrl({
+                    stateName: 'hydrator.list',
+                    stateParams: {
+                      namespace,
+                    },
+                  })}
+                >
+                  {T.translate(`${I18N_PREFIX}.pipelinesMessage`)}
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </Router>
   );
 }
 Page404.defaultProps = {
@@ -79,4 +92,5 @@ Page404.propTypes = {
   entityType: PropTypes.string,
   entityName: PropTypes.string,
   children: PropTypes.node,
+  message: PropTypes.string,
 };

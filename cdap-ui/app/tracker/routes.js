@@ -43,6 +43,26 @@ angular.module(PKG.name + '.feature.tracker')
           sessionToken: function() {
             window.CaskCommon.SessionTokenStore.fetchSessionToken();
           },
+          rValidNamespace: function ($stateParams, myNamespace) {
+            const { namespace } = $stateParams;
+
+            myNamespace.getList().then(namespaces => {
+              const validNamespace = namespaces.find(ns => ns.name === namespace);
+              // Current namespace not in available list of namespaces
+              if (namespaces.length > 0 && !validNamespace) {
+                const error = {
+                  statusCode: 404,
+                  data: `Namespace ${namespace} does not exist.`
+                };
+                window.CaskCommon.ee.emit(
+                  window.CaskCommon.globalEvents.PAGE_LEVEL_ERROR, error);
+              }
+            }).catch(err => {
+              //When namespace call fails for any other reason
+              window.CaskCommon.ee.emit(
+                window.CaskCommon.globalEvents.PAGE_LEVEL_ERROR, err);
+            });
+          }
         },
       })
       .state('tracker', {

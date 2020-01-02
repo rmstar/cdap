@@ -61,6 +61,26 @@ angular.module(PKG.name + '.feature.hydrator')
               defer.resolve();
             });
             return defer.promise;
+          },
+          rValidNamespace: function ($stateParams, myNamespace) {
+            const { namespace } = $stateParams;
+
+            myNamespace.getList().then(namespaces => {
+              const validNamespace = namespaces.find(ns => ns.name === namespace);
+              // Current namespace not in available list of namespaces
+              if (namespaces.length > 0 && !validNamespace) {
+                const error = {
+                  statusCode: 404,
+                  data: `Namespace ${namespace} does not exist.`
+                };
+                window.CaskCommon.ee.emit(
+                  window.CaskCommon.globalEvents.PAGE_LEVEL_ERROR, error);
+              }
+            }).catch(err => {
+              //When namespace call fails for any other reason
+              window.CaskCommon.ee.emit(
+                window.CaskCommon.globalEvents.PAGE_LEVEL_ERROR, err);
+            });
           }
         },
         data: {
@@ -195,12 +215,8 @@ angular.module(PKG.name + '.feature.hydrator')
                 return validUISupportedArtifact.length ?  validUISupportedArtifact[0]: false;
               };
 
-              let showError = (message) => {
-                message = (typeof message === 'string' ? message : GLOBALS.en.hydrator.studio.error['MISSING-SYSTEM-ARTIFACTS']);
-                myAlertOnValium.show({
-                  type: 'danger',
-                  content: message
-                });
+              let showError = (error) => {
+                window.CaskCommon.ee.emit(window.CaskCommon.globalEvents.PAGE_LEVEL_ERROR,error);
               };
 
               myPipelineApi.fetchArtifacts({
@@ -240,7 +256,7 @@ angular.module(PKG.name + '.feature.hydrator')
                 }
               },
               (err) => {
-                showError(err);
+                  showError(err);
               }
             );
               return defer.promise;
