@@ -17,7 +17,19 @@
 import * as React from 'react';
 import { INodeComponentProps } from 'components/DAG/DAGRenderer';
 import { WithStyles } from '@material-ui/core/styles/withStyles';
-import { endpointTargetEndpointParams, genericNodeStyles } from 'components/DAG/Nodes/utilities';
+import {
+  endpointPaintStyles,
+  endpointTargetEndpointParams,
+  genericNodeStyles,
+} from 'components/DAG/Nodes/utilities';
+import ButtonBase from '@material-ui/core/ButtonBase';
+
+enum ENDPOINT {
+  REGULAR = 'regular',
+  ALERT = 'alert',
+  ERROR = 'error',
+}
+
 const AbstractNodeStyles = genericNodeStyles();
 
 export interface IAbstractNodeProps<S extends typeof AbstractNodeStyles>
@@ -27,24 +39,18 @@ export interface IAbstractNodeProps<S extends typeof AbstractNodeStyles>
 export class AbstractNode<
   P extends IAbstractNodeProps<typeof AbstractNodeStyles>
 > extends React.Component<P, any> {
-  private rootRef: HTMLElement | null;
+  public regularEndpointRef: HTMLElement | null;
 
   public type = '';
 
+  public static ENDPOINT = ENDPOINT;
   public componentDidMount() {
-    const endPointParams = this.getEndpointParams();
     if (this.props.initNode && typeof this.props.initNode === 'function') {
       const initConfig = {
-        endPointParams: [
-          {
-            element: this.rootRef,
-            params: endPointParams,
-            referenceParams: {},
-          },
-        ],
+        endPointParams: this.getEndpointParams(),
         makeTargetParams: endpointTargetEndpointParams(`${this.props.id}-DottedEndPoint`),
         nodeId: this.props.id,
-        checkForValidIncomingConnection: this.checkForValidIncomingConnection,
+        validConnectionHandler: this.checkForValidIncomingConnection,
       };
       this.props.initNode(initConfig);
     }
@@ -54,27 +60,74 @@ export class AbstractNode<
   }
 
   public getEndpointParams = () => {
-    return null;
+    const endPointConfigs = this.getEndpointConfig();
+    return [
+      {
+        element: this.regularEndpointRef,
+        params: endPointConfigs,
+        referenceParams: {},
+      },
+    ];
   };
 
-  public checkForValidIncomingConnection = (connObj) => true;
+  public getEndpointConfig = () => {
+    return {
+      Anchor: [1, 0.5, 1, 0, 0, 2], // same as Right but moved down 2px
+      isSource: true,
+      maxConnections: -1, // -1 means unlimited connections
+      Endpoint: 'Dot',
+      EndpointStyle: { radius: 20 },
+      Connector: [
+        'Flowchart',
+        { stub: [10, 15], alwaysRespectStubs: true, cornerRadius: 20, midpoint: 0.2 },
+      ],
+      paintStyle: endpointPaintStyles,
+    };
+  };
+
+  public getAlertEndpointConfig = () => {
+    return {
+      ...this.getEndpointConfig(),
+      anchor: [0.5, 1, 0, 1, 1, 0], // same as Bottom but moved right 2px
+    };
+  };
+
+  public getErrorEndpointConfig = () => {
+    return {
+      ...this.getEndpointConfig(),
+      anchor: [0.5, 1, 0, 1, 2, 0], // same as Bottom but moved right 3px
+    };
+  };
+
+  public checkForValidIncomingConnection = (connObj) => {
+    return true;
+  };
 
   public render() {
     const { classes } = this.props;
     const Endpoint = () => (
       <div
-        className={classes.endpointCircle}
-        ref={(ref) => (this.rootRef = ref)}
+        className={`${classes.endpointCircle} ${classes.regularEndpointCircle}`}
+        ref={(ref) => (this.regularEndpointRef = ref)}
         data-node-type={this.type}
+        data-endpoint-type={ENDPOINT.REGULAR}
       >
         <div className={classes.endpointCaret} />
       </div>
     );
     return (
-      <div id={this.props.id} className={classes.root} data-node-type={this.type}>
-        {this.props.config && this.props.config.label ? this.props.config.label : this.props.id}
+      <ButtonBase
+        focusRipple
+        id={this.props.id}
+        className={classes.root}
+        data-node-type={this.type}
+        focusVisibleClassName={classes.focusVisible}
+      >
+        <span>
+          {this.props.config && this.props.config.label ? this.props.config.label : this.props.id}
+        </span>
         <Endpoint />
-      </div>
+      </ButtonBase>
     );
   }
 }
