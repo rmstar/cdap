@@ -35,7 +35,7 @@ export default function EmptyMessageContainer({ title = null, searchText = '', c
   );
 }
 EmptyMessageContainer.propTypes = {
-  title: PropTypes.string,
+  title: PropTypes.ReactNode,
   searchText: PropTypes.string,
   children: PropTypes.node.isRequired,
 };
