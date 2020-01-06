@@ -298,7 +298,7 @@ const renderModelDetails = (model, newlyTrainingModel, experimentId) => {
           {splitId ? (
             <div>
               <strong>{T.translate(`${PREFIX}.modelTrainingLogs`)}</strong>
-              <a href={modelTrainingLogsUrl} target="_blank">
+              <a href={modelTrainingLogsUrl} target="_blank" rel="noopener noreferrer">
                 {' '}
                 Logs{' '}
               </a>

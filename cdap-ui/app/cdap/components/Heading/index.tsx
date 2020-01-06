@@ -12,7 +12,7 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-*/
+ */
 
 import * as React from 'react';
 export enum HeadingTypes {
@@ -29,8 +29,8 @@ export interface IHeadingProps {
   className?: string;
   id?: string;
 }
-const Heading: React.SFC<IHeadingProps> = ({ type, label, className, id }) => {
-  let HtmlHeading: string = '';
+function Heading({ type, label, className, id }: IHeadingProps) {
+  let HtmlHeading;
   switch (type) {
     case HeadingTypes.h2:
       HtmlHeading = 'h2';
@@ -57,6 +57,6 @@ const Heading: React.SFC<IHeadingProps> = ({ type, label, className, id }) => {
     props.id = id;
   }
   return <HtmlHeading {...props}>{label}</HtmlHeading>;
-};
+}
 
 export default Heading;

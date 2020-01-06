@@ -150,7 +150,7 @@ export const fetchAggregateProfileMetrics = (namespace, profile, extraTags) => {
             metricValue = metric.data.reduce((prev, curr) => prev + curr.value, 0);
           }
         }
-        if (!metricsMap.hasOwnProperty(query)) {
+        if (!Object.prototype.hasOwnProperty.call(metricsMap, query)) {
           metricsMap[query] = {};
         }
         if (metricsMap[query][metricName] !== '--' && !isNil(metricsMap[query][metricName])) {
@@ -281,7 +281,7 @@ export const getProfiles = (namespace) => {
               metricValue = metric.data.reduce((prev, curr) => prev + curr.value, 0);
             }
           }
-          if (!profilesToMetricsMap.hasOwnProperty(profileKey)) {
+          if (!Object.prototype.hasOwnProperty.call(profilesToMetricsMap, profileKey)) {
             profilesToMetricsMap[profileKey] = { [metricsKey]: {} };
           }
           if (!isNil(objectQuery(profilesToMetricsMap, profileKey, metricsKey, metricName))) {

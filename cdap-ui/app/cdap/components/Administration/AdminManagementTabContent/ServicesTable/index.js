@@ -384,7 +384,7 @@ export default class ServicesTable extends Component {
                   </td>
                 </If>
                 <td>
-                  <a href={logUrl} target="_blank">
+                  <a href={logUrl} target="_blank" rel="noopener noreferrer">
                     {T.translate(`${ADMINPREFIX}.viewlogs`)}
                   </a>
                 </td>

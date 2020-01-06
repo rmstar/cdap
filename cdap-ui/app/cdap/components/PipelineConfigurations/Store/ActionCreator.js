@@ -129,7 +129,10 @@ const updateKeyValueStore = () => {
 const getMacrosResolvedByPrefs = (resolvedPrefs = {}, macrosMap = {}) => {
   let resolvedMacros = { ...macrosMap };
   for (let pref in resolvedPrefs) {
-    if (resolvedPrefs.hasOwnProperty(pref) && resolvedMacros.hasOwnProperty(pref)) {
+    if (
+      Object.prototype.hasOwnProperty.call(resolvedPrefs, pref) &&
+      Object.prototype.hasOwnProperty.call(resolvedMacros, pref)
+    ) {
       resolvedMacros[pref] = resolvedPrefs[pref];
     }
   }
