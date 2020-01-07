@@ -51,7 +51,7 @@ const getSplitFailedElem = (experimentId, splitInfo) => {
   return (
     <span className="split-error-container">
       {T.translate(`${PREFIX}.failedToSplit`, { experimentId })}
-      <a href={getSplitLogsUrl(experimentId, splitInfo)} target="_blank">
+      <a href={getSplitLogsUrl(experimentId, splitInfo)} target="_blank" rel="noopener noreferrer">
         {T.translate(`${PREFIX}.logs`)}
       </a>
       {T.translate(`${PREFIX}.moreInfo`)}
