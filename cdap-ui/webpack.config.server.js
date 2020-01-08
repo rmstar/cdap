@@ -15,11 +15,10 @@
  */
 
 var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
-var CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var path = require('path');
 
-let pathsToClean = ['server_dist_test'];
 let cleanOptions = {
   verbose: true,
   dry: false,
@@ -37,12 +36,17 @@ var webpackConfig = {
     publicPath: '/server_dist_test/',
   },
   plugins: [
-    new CleanWebpackPlugin(pathsToClean, cleanOptions),
+    new CleanWebpackPlugin(cleanOptions),
     new CaseSensitivePathsPlugin(),
     new CopyWebpackPlugin([
       {
         from: './graphql',
         to: './graphql',
+      },
+      {
+        from: './server/config/**/*.json',
+        to: '.',
+        ignore: ['server/config/development/**/*.json'],
       },
     ]),
   ],

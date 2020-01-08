@@ -56,4 +56,5 @@ function getHostName() {
   return deferred.promise;
 }
 
-module.exports = getHostName;
+// module.exports = getHostName;
+export default getHostName;

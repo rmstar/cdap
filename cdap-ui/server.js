@@ -27,8 +27,10 @@ var express = require('./server/express.js'),
   log4js = require('log4js'),
   graphql = require('./graphql/graphql.js'),
   https = require('https'),
-  getHostName = require('./server/config/hostname'),
+  getHostName = require('./server/config/hostname').default,
   ip = require('ip');
+
+console.log('getHost', getHostName);
 
 var cdapConfig,
   securityConfig,

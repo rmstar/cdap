@@ -58,6 +58,8 @@ const getExpressStaticConfig = () => {
 };
 
 function makeApp(authAddress, cdapConfig, uiSettings) {
+  console.log('\tCHECK PATH: ' + CDAP_DIST_PATH);
+
   var app = express();
   /**
    * Express template setup
