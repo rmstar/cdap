@@ -27,16 +27,19 @@
     </p>
   </h5>
   <span class="text-success"
-        ng-if="HydratorPlusPlusNodeConfigCtrl.errorCount === 0">No errors found.</span>
+        ng-if="HydratorPlusPlusNodeConfigCtrl.errorCount === 0"
+        data-cy="plugin-properties-no-errors">No errors found.</span>
   <span class="text-danger"
         ng-if="HydratorPlusPlusNodeConfigCtrl.errorCount > 0">
     <ng-pluralize count="HydratorPlusPlusNodeConfigCtrl.errorCount"
+                  data-cy="plugin-properties-errors-found"
                   when="{'1': '1 error found',
-                         'other': '{} errors found.'}">
+                             'other': '{} errors found.'}">
     </ng-pluralize>
   </span>
   <div class="btn-group pull-right">
     <button class="btn btn-primary validate-btn" type="button"
+            data-cy="plugin-properties-validate-btn"
             ng-if="!isDisabled"
             ng-class="{'disabled': HydratorPlusPlusNodeConfigCtrl.validating}"
             ng-click="!HydratorPlusPlusNodeConfigCtrl.validating && HydratorPlusPlusNodeConfigCtrl.validatePluginProperties()">
