@@ -27,9 +27,7 @@ export const DatePickerStyles = () => {
   };
 };
 
-interface IDateTimeWidgetProps extends IWidgetProps<null>, WithStyles<typeof DatePickerStyles> {
-  format?: string; // If we want to be able to specify formats for sending to backend
-}
+interface IDateTimeWidgetProps extends IWidgetProps<null>, WithStyles<typeof DatePickerStyles> {}
 
 const DateTimeWidget: React.FC<IDateTimeWidgetProps> = ({ value, onChange, disabled, classes }) => {
   const initStart = typeof value === 'string' ? parseInt(value, 10) : 0;
