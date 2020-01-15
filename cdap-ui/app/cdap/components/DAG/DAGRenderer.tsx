@@ -48,7 +48,7 @@ export interface IInitNodeProps {
   endPointParams?: IEndPointArgs[];
   makeSourceParams?: any;
   makeTargetParams?: any;
-  validConnectionHandler?: IValidationConnectionListener;
+  validConnectionHandler?: IValidationConnectionListenerMap;
 }
 
 export interface IRegisterTypesProps {
@@ -85,6 +85,10 @@ interface IConnectionObj extends IConnection {
 }
 
 type IValidationConnectionListener = (connectionObj: IConnectionObj) => boolean;
+interface IValidationConnectionListenerMap {
+  validationListener: IValidationConnectionListener;
+  type: string;
+}
 
 class DAGRendererComponent extends React.Component<IDAGRendererProps, any> {
   public state = {
@@ -92,7 +96,7 @@ class DAGRendererComponent extends React.Component<IDAGRendererProps, any> {
     jsPlumbInstance: jsPlumb.getInstance(this.props.jsPlumbSettings || {}),
   };
 
-  private validConnectionListeners: IValidationConnectionListener[] = [];
+  public static validConnectionListeners: IValidationConnectionListenerMap[] = [];
 
   public componentDidMount() {
     jsPlumb.ready(() => {
@@ -246,12 +250,32 @@ class DAGRendererComponent extends React.Component<IDAGRendererProps, any> {
     }
     this.makeNodeDraggable(nodeId);
     if (validConnectionHandler) {
-      this.validConnectionListeners.push(validConnectionHandler);
+      if (
+        DAGRendererComponent.validConnectionListeners.find(
+          (listener) => listener.type === validConnectionHandler.type
+        )
+      ) {
+        return;
+      }
+      DAGRendererComponent.validConnectionListeners.push(validConnectionHandler);
     }
   };
 
   private checkForValidIncomingConnection = (connObj: IConnectionObj) => {
-    return this.validConnectionListeners.reduce((prev, curr) => prev && curr(connObj), true);
+    const sourceNode = document.getElementById(connObj.sourceId);
+    let sourceNodeType;
+    if (sourceNode) {
+      sourceNodeType = sourceNode.getAttribute('data-node-type');
+    }
+    const targetNode = document.getElementById(connObj.targetId);
+    let targetNodeType;
+    if (targetNode) {
+      targetNodeType = targetNode.getAttribute('data-node-type');
+    }
+    const listeners = DAGRendererComponent.validConnectionListeners
+      .filter((l) => [sourceNodeType, targetNodeType].indexOf(l.type) !== -1)
+      .map((l) => l.validationListener);
+    return listeners.reduce((prev, curr) => prev && curr(connObj), true);
   };
 
   private renderChildren() {
