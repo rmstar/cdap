@@ -104,11 +104,11 @@ export default class AbstractRow<
 
           <If condition={!this.props.disabled}>
             <React.Fragment>
-              <IconButton onClick={this.props.addRow} className="add-row">
+              <IconButton onClick={this.props.addRow} data-cy="add-row">
                 <AddIcon fontSize="small" />
               </IconButton>
 
-              <IconButton color="secondary" onClick={this.props.removeRow} className="remove-row">
+              <IconButton color="secondary" onClick={this.props.removeRow} data-cy="remove-row">
                 <DeleteIcon fontSize="small" />
               </IconButton>
             </React.Fragment>

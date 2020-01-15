@@ -118,7 +118,7 @@ class KeyValueDropdownRow extends AbstractRow<IKeyValueDropdownRowProps, IKeyVal
           onKeyDown={this.handleKeyDown}
           disabled={this.props.disabled}
           inputRef={this.props.forwardedRef}
-          className="key"
+          data-cy="key"
         />
 
         <Select
@@ -127,7 +127,7 @@ class KeyValueDropdownRow extends AbstractRow<IKeyValueDropdownRowProps, IKeyVal
           onChange={this.handleChange.bind(this, 'value')}
           displayEmpty={true}
           disabled={this.props.disabled}
-          className="value"
+          data-cy="value"
         >
           {dropdownOptions.map((option) => {
             return (

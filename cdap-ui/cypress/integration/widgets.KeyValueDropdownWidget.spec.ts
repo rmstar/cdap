@@ -63,17 +63,17 @@ describe('KeyValueDropdown Widgets', () => {
   });
 
   it('Should add a new row', () => {
-    cy.get(`${row1Selector} .add-row`).click();
+    cy.get(`${row1Selector} ${dataCy('add-row')}`).click();
     cy.get(`${row2Selector}`).should('exist');
   });
 
   it('Should input property', () => {
-    cy.get(`${row1Selector} .key`).type('key1');
-    cy.get(`${row1Selector} .value`).click();
+    cy.get(`${row1Selector} ${dataCy('key')}`).type('key1');
+    cy.get(`${row1Selector} ${dataCy('value')}`).click();
     cy.get(dataCy('value-boolean')).click();
 
-    cy.get(`${row2Selector} .key`).type('key2');
-    cy.get(`${row2Selector} .value`).click();
+    cy.get(`${row2Selector} ${dataCy('key')}`).type('key2');
+    cy.get(`${row2Selector} ${dataCy('value')}`).click();
     cy.get(dataCy('value-int')).click();
 
     cy.close_node_property();
@@ -88,22 +88,22 @@ describe('KeyValueDropdown Widgets', () => {
     cy.open_node_property(projectionId);
     cy.get(row1Selector).should('exist');
     cy.get(row2Selector).should('exist');
-    cy.get(`${row1Selector} .key input`)
+    cy.get(`${row1Selector} ${dataCy('key')} input`)
       .invoke('val')
       .then((val) => {
         expect(val).equals('key1');
       });
-    cy.get(`${row1Selector} .value input`)
+    cy.get(`${row1Selector} ${dataCy('value')} input`)
       .invoke('val')
       .then((val) => {
         expect(val).equals('boolean');
       });
-    cy.get(`${row2Selector} .key input`)
+    cy.get(`${row2Selector} ${dataCy('key')} input`)
       .invoke('val')
       .then((val) => {
         expect(val).equals('key2');
       });
-    cy.get(`${row2Selector} .value input`)
+    cy.get(`${row2Selector} ${dataCy('value')} input`)
       .invoke('val')
       .then((val) => {
         expect(val).equals('int');
@@ -111,7 +111,7 @@ describe('KeyValueDropdown Widgets', () => {
   });
 
   it('Should delete property', () => {
-    cy.get(`${row2Selector} .remove-row`).click();
+    cy.get(`${row2Selector} ${dataCy('remove-row')}`).click();
     cy.get(row2Selector).should('not.exist');
 
     cy.close_node_property();

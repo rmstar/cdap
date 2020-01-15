@@ -64,13 +64,13 @@ describe('CSV Widgets', () => {
   });
 
   it('Should add a new row', () => {
-    cy.get(`${row1Selector} .add-row`).click();
+    cy.get(`${row1Selector} ${dataCy('add-row')}`).click();
     cy.get(`${row2Selector}`).should('exist');
   });
 
   it('Should input property', () => {
-    cy.get(`${row1Selector} .key`).type('value1');
-    cy.get(`${row2Selector} .key`).type('value2');
+    cy.get(`${row1Selector} ${dataCy('key')}`).type('value1');
+    cy.get(`${row2Selector} ${dataCy('key')}`).type('value2');
 
     cy.close_node_property();
 
@@ -85,7 +85,7 @@ describe('CSV Widgets', () => {
 
     cy.get(row1Selector).should('exist');
     cy.get(row2Selector).should('exist');
-    cy.get(`${row1Selector} .key input`)
+    cy.get(`${row1Selector} ${dataCy('key')} input`)
       .invoke('val')
       .then((val) => {
         expect(val).equals('value1');
@@ -93,7 +93,7 @@ describe('CSV Widgets', () => {
   });
 
   it('Should delete property', () => {
-    cy.get(`${row2Selector} .remove-row`).click();
+    cy.get(`${row2Selector} ${dataCy('remove-row')}`).click();
     cy.get(`${row2Selector}`).should('not.exist');
 
     cy.close_node_property();
