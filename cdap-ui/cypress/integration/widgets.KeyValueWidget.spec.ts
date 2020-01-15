@@ -14,18 +14,20 @@
  * the License.
 */
 
-import { loginIfRequired, getArtifactsPoll } from '../helpers';
-import { INodeInfo } from '../typings';
-import {
-  propertySelector,
-  rowSelector,
-  openPropertyModal,
-  getExportProperties,
-} from '../support/MultiRowWidgets/utilities';
+import { loginIfRequired, getArtifactsPoll, dataCy } from '../helpers';
+import { INodeInfo, INodeIdentifier } from '../typings';
 
 let headers = {};
 
 describe('KeyValue Widgets', () => {
+  const property = 'rename';
+  const projection: INodeInfo = { nodeName: 'Projection', nodeType: 'transform' };
+  const projectionId: INodeIdentifier = { ...projection, nodeId: '0' };
+
+  const propertySelector = dataCy(property);
+  const row1Selector = `${propertySelector} ${dataCy(0)}`;
+  const row2Selector = `${propertySelector} ${dataCy(1)}`;
+
   // Uses API call to login instead of logging in manually through UI
   before(() => {
     loginIfRequired().then(() => {
@@ -42,7 +44,6 @@ describe('KeyValue Widgets', () => {
 
   before(() => {
     cy.visit('/pipelines/ns/default/studio');
-    const projection: INodeInfo = { nodeName: 'Projection', nodeType: 'transform' };
 
     // add plugin to canvas
     cy.open_transform_panel();
@@ -53,55 +54,53 @@ describe('KeyValue Widgets', () => {
     getArtifactsPoll(headers);
   });
 
-  const property = 'rename';
-
   it('Should render KeyValue row', () => {
-    openPropertyModal();
-    cy.get(propertySelector(property)).should('exist');
-    cy.get(rowSelector(property, 0)).should('exist');
-    cy.get(rowSelector(property, 1)).should('not.exist');
+    cy.open_node_property(projectionId);
+
+    cy.get(propertySelector).should('exist');
+    cy.get(row1Selector).should('exist');
+    cy.get(row2Selector).should('not.exist');
   });
 
   it('Should add a new row', () => {
-    cy.get(`${rowSelector(property, 0)} .add-row`).click();
-    cy.get(`${rowSelector(property, 1)}`).should('exist');
+    cy.get(`${row1Selector} .add-row`).click();
+    cy.get(`${row2Selector}`).should('exist');
   });
 
   it('Should input property', () => {
-    cy.get(`${rowSelector(property, 0)} .key`).type('key1');
-    cy.get(`${rowSelector(property, 0)} .value`).type('value1');
-    cy.get(`${rowSelector(property, 1)} .key`).type('key2');
-    cy.get(`${rowSelector(property, 1)} .value`).type('value2');
+    cy.get(`${row1Selector} .key`).type('key1');
+    cy.get(`${row1Selector} .value`).type('value1');
+    cy.get(`${row2Selector} .key`).type('key2');
+    cy.get(`${row2Selector} .value`).type('value2');
 
-    cy.get('[data-testid="close-config-popover"]').click();
-    cy.get('[data-cy="pipeline-export-btn"]').click();
-    getExportProperties('Projection').then((properties) => {
-      expect(properties[property]).equals('key1:value1,key2:value2');
+    cy.close_node_property();
+
+    cy.get_pipeline_stage_json(projectionId.nodeName).then((stage) => {
+      const stageProperties = stage.plugin.properties;
+      expect(stageProperties[property]).equals('key1:value1,key2:value2');
     });
-
-    cy.get('[data-cy="export-pipeline-close-modal-btn"]').click();
   });
 
   it('Should re-render existing property', () => {
-    openPropertyModal();
-    cy.get(`${rowSelector(property, 0)}`).should('exist');
-    cy.get(`${rowSelector(property, 1)}`).should('exist');
-    cy.get(`${rowSelector(property, 0)} .key input`)
+    cy.open_node_property(projectionId);
+    cy.get(row1Selector).should('exist');
+    cy.get(row2Selector).should('exist');
+    cy.get(`${row1Selector} .key input`)
       .invoke('val')
       .then((val) => {
         expect(val).equals('key1');
       });
-    cy.get(`${rowSelector(property, 0)} .value input`)
+    cy.get(`${row1Selector} .value input`)
       .invoke('val')
       .then((val) => {
         expect(val).equals('value1');
       });
-    cy.get(`${rowSelector(property, 1)} .key input`)
+    cy.get(`${row2Selector} .key input`)
       .invoke('val')
       .then((val) => {
         expect(val).equals('key2');
       });
-    cy.get(`${rowSelector(property, 1)} .value input`)
+    cy.get(`${row2Selector} .value input`)
       .invoke('val')
       .then((val) => {
         expect(val).equals('value2');
@@ -109,15 +108,14 @@ describe('KeyValue Widgets', () => {
   });
 
   it('Should delete property', () => {
-    cy.get(`${rowSelector(property, 1)} .remove-row`).click();
-    cy.get(`${rowSelector(property, 1)}`).should('not.exist');
+    cy.get(`${row2Selector} .remove-row`).click();
+    cy.get(row2Selector).should('not.exist');
 
-    cy.get('[data-testid="close-config-popover"]').click();
-    cy.get('[data-cy="pipeline-export-btn"]').click();
-    getExportProperties('Projection').then((properties) => {
-      expect(properties[property]).equals('key1:value1');
+    cy.close_node_property();
+
+    cy.get_pipeline_stage_json(projectionId.nodeName).then((stage) => {
+      const stageProperties = stage.plugin.properties;
+      expect(stageProperties[property]).equals('key1:value1');
     });
-
-    cy.get('[data-cy="export-pipeline-close-modal-btn"]').click();
   });
 });
