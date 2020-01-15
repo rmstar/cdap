@@ -50,7 +50,10 @@ export class AbstractNode<
         endPointParams: this.getEndpointParams(),
         makeTargetParams: endpointTargetEndpointParams(`${this.props.id}-DottedEndPoint`),
         nodeId: this.props.id,
-        validConnectionHandler: this.checkForValidIncomingConnection,
+        validConnectionHandler: {
+          type: this.type,
+          validationListener: this.checkForValidIncomingConnection,
+        },
       };
       this.props.initNode(initConfig);
     }
