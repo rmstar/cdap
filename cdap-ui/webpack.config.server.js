@@ -66,6 +66,18 @@ var webpackConfig = {
       },
     ],
   },
+  resolve: {
+    extensions: ['.mjs', '.js'],
+    alias: {
+      // components: __dirname + '/app/cdap/components',
+      // services: __dirname + '/app/cdap/services',
+      // api: __dirname + '/app/cdap/api',
+      // lib: __dirname + '/app/lib',
+      // styles: __dirname + '/app/cdap/styles',
+      server: __dirname + '/server',
+      gql: __dirname + '/graphql',
+    },
+  },
 };
 
 module.exports = webpackConfig;

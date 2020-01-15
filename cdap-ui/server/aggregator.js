@@ -22,9 +22,9 @@ const request = require('request'),
   log4js = require('log4js'),
   log = log4js.getLogger('default'),
   hash = require('object-hash'),
-  urlHelper = require('./url-helper'),
-  parser = require('./config/parser.js'),
-  sessionToken = require('./token');
+  urlHelper = require('server/url-helper'),
+  parser = require('server/config/parser.js'),
+  sessionToken = require('server/token');
 
 /**
  * Default Poll Interval used by the backend.

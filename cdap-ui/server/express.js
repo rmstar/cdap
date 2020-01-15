@@ -16,7 +16,7 @@
  */
 
 /* global require, module, process, __dirname */
-const urlhelper = require('./url-helper'),
+const urlhelper = require('server/url-helper'),
   url = require('url'),
   csp = require('helmet-csp'),
   proxy = require('express-http-proxy'),
@@ -38,9 +38,9 @@ const urlhelper = require('./url-helper'),
   MARKET_DIST_PATH = path.normalize(__dirname + '/public/common_dist'),
   fs = require('fs'),
   hsts = require('hsts'),
-  uiThemeWrapper = require('./uiThemeWrapper'),
+  uiThemeWrapper = require('server/uiThemeWrapper'),
   frameguard = require('frameguard'),
-  sessionToken = require('./token');
+  sessionToken = require('server/token');
 
 ejs.delimiter = '_';
 const log = log4js.getLogger('default');
@@ -58,8 +58,6 @@ const getExpressStaticConfig = () => {
 };
 
 function makeApp(authAddress, cdapConfig, uiSettings) {
-  console.log('\tCHECK PATH: ' + CDAP_DIST_PATH);
-
   var app = express();
   /**
    * Express template setup

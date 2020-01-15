@@ -14,7 +14,7 @@
  * the License.
  */
 
-const { PIPELINE_PROGRAMS_MAP } = require('./common');
+const { PIPELINE_PROGRAMS_MAP } = require('gql/types/PipelineRecord/common');
 
 async function pipelineRunsResolver(parent, args, context) {
   const namespace = context.namespace;

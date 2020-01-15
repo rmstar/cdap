@@ -14,8 +14,8 @@
  * the License.
  */
 
-const { pipelineRunsResolver } = require('./pipelineRunsResolver');
-const { totalRunsResolvers } = require('./totalRunsResolver');
+const { pipelineRunsResolver } = require('gql/types/PipelineRecord/pipelineRunsResolver');
+const { totalRunsResolvers } = require('gql/types/PipelineRecord/totalRunsResolver');
 
 const resolvers = {
   PipelineRecord: {

@@ -14,7 +14,7 @@
  * the License.
 */
 
-var session = require('./token');
+var session = require('server/token');
 var assert = require('assert');
 
 const fakeCDAPConfig = {

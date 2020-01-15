@@ -14,9 +14,9 @@
  * the License.
  */
 
-const urlHelper = require('../../../server/url-helper'),
-  cdapConfigurator = require('../../../server/cdap-config.js'),
-  resolversCommon = require('../../resolvers-common.js');
+const urlHelper = require('server/url-helper'),
+  cdapConfigurator = require('server/cdap-config.js'),
+  resolversCommon = require('gql/resolvers-common.js');
 
 let cdapConfig;
 cdapConfigurator.getCDAPConfig().then(function (value) {

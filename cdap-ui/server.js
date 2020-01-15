@@ -17,20 +17,18 @@
 /**
  * Spins up servers
  */
-var express = require('./server/express.js'),
-  Aggregator = require('./server/aggregator.js'),
-  parser = require('./server/config/parser.js'),
-  cdapConfigurator = require('./server/cdap-config.js'),
+var express = require('server/express.js'),
+  Aggregator = require('server/aggregator.js'),
+  parser = require('server/config/parser.js'),
+  cdapConfigurator = require('server/cdap-config.js'),
   sockjs = require('sockjs'),
   http = require('http'),
   fs = require('fs'),
   log4js = require('log4js'),
-  graphql = require('./graphql/graphql.js'),
+  graphql = require('gql/graphql.js'),
   https = require('https'),
-  getHostName = require('./server/config/hostname').default,
+  getHostName = require('server/config/hostname').default,
   ip = require('ip');
-
-console.log('getHost', getHostName);
 
 var cdapConfig,
   securityConfig,

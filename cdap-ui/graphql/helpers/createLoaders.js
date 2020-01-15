@@ -15,8 +15,8 @@
  */
 
 const DataLoader = require('dataloader');
-const { batchProgramRuns } = require('./BatchEndpoints/programRuns');
-const { batchTotalRuns } = require('./BatchEndpoints/totalRuns');
+const { batchProgramRuns } = require('gql/helpers/BatchEndpoints/programRuns');
+const { batchTotalRuns } = require('gql/helpers/BatchEndpoints/totalRuns');
 
 function createLoaders(auth) {
   return {

@@ -18,9 +18,9 @@ const path = require('path');
 const { ApolloServer } = require('apollo-server-express');
 const { importSchema } = require('graphql-import');
 const log4js = require('log4js');
-const { resolvers } = require('./resolvers');
-const sessionToken = require('../server/token');
-const { createLoaders } = require('./helpers/createLoaders');
+const { resolvers } = require('gql/resolvers');
+const sessionToken = require('server/token');
+const { createLoaders } = require('gql/helpers/createLoaders');
 
 const log = log4js.getLogger('graphql');
 const env = process.env.NODE_ENV || 'production';
