@@ -267,7 +267,7 @@
                   <goal>yarn</goal>
                 </goals>
                 <configuration>
-                  <arguments>run ncc</arguments>
+                  <arguments>run build-server</arguments>
                 </configuration>
               </execution>
             </executions>
@@ -285,14 +285,19 @@
                 </goals>
                 <configuration>
                   <target>
-                    <copy todir = "${stage.opt.dir}">
+                    <!-- <copy todir = "${stage.opt.dir}">
                       <fileset dir = "server_dist">
                         <exclude name="node_modules/**" />
                       </fileset>
+                    </copy> -->
+                    <copy todir="${stage.opt.dir}">
+                      <fileset dir="packaged">
+                        <exclude name="node_modules/**" />
+                      </fileset>
                     </copy>
-                    <copy todir = "${stage.opt.dir}/public">
+                    <!-- <copy todir = "${stage.opt.dir}/public">
                       <fileset dir = "server/public" />
-                    </copy>
+                    </copy> -->
                     <copy todir = "${stage.opt.dir}/bin">
                       <fileset dir = "node">
                         <include name="node" />
@@ -312,9 +317,9 @@
                     <copy todir = "${stage.opt.dir}/server/config/themes">
                       <fileset dir = "server/config/themes" />
                     </copy>
-                    <copy todir = "${stage.opt.dir}/graphql">
+                    <!-- <copy todir = "${stage.opt.dir}/graphql">
                       <fileset dir = "graphql" />
-                    </copy>
+                    </copy> -->
                   </target>
                 </configuration>
               </execution>

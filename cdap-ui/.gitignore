@@ -20,6 +20,8 @@ coverage/
 server_dist/
 server/public/*
 !server/public/dll
+packaged/public/*
+!packaged/public/dll
 .vscode/
 cypress/screenshots
 cypress/snapshots/actual/
