@@ -31,12 +31,14 @@ const env = process.env.NODE_ENV || 'production';
  * instead of cdap-sdk/ui/graphql. So when we start from sdk we need to append
  * graphql to the path for accessing schema.
  */
-let typeDefs;
-if (!__dirname.endsWith('/graphql')) {
-  typeDefs = importSchema(path.join(__dirname, '/graphql/schema/rootSchema.graphql'));
-} else {
-  typeDefs = importSchema(path.join(__dirname, '/schema/rootSchema.graphql'));
-}
+// let typeDefs;
+// if (!__dirname.endsWith('/graphql')) {
+//   typeDefs = importSchema(path.join(__dirname, '/graphql/schema/rootSchema.graphql'));
+// } else {
+//   typeDefs = importSchema(path.join(__dirname, '/schema/rootSchema.graphql'));
+// }
+
+const typeDefs = importSchema(path.join(__dirname, '/graphql/schema/rootSchema.graphql'));
 
 if (typeof typeDefs === 'undefined') {
   const errorMessage = 'The GraphQL type definitions are undefined';

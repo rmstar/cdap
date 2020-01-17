@@ -36,9 +36,13 @@ let cleanOptions = {
 const loaderExclude = [
   /node_modules/,
   /bower_components/,
-  /server\/public\/dist/,
-  /server\/public\/cdap_dist/,
-  /server\/public\/common_dist/,
+
+  // START
+  /packaged\/public\/dist/,
+  /packaged\/public\/cdap_dist/,
+  /packaged\/public\/common_dist/,
+  // END
+
   /lib/,
 ];
 
@@ -53,12 +57,12 @@ const getWebpackDllPlugins = (mode) => {
   }
   return [
     new webpack.DllReferencePlugin({
-      context: path.resolve(__dirname, 'server', 'public', 'dll'),
-      manifest: require(path.join(__dirname, 'server', 'public', 'dll', sharedDllManifestFileName)),
+      context: path.resolve(__dirname, 'packaged', 'public', 'dll'),
+      manifest: require(path.join(__dirname, 'packaged', 'public', 'dll', sharedDllManifestFileName)),
     }),
     new webpack.DllReferencePlugin({
-      context: path.resolve(__dirname, 'server', 'public', 'dll'),
-      manifest: require(path.join(__dirname, 'server', 'public', 'dll', cdapDllManifestFileName)),
+      context: path.resolve(__dirname, 'packaged', 'public', 'dll'),
+      manifest: require(path.join(__dirname, 'packaged', 'public', 'dll', cdapDllManifestFileName)),
     }),
   ];
 };
@@ -195,7 +199,7 @@ if (mode === 'development') {
       port: 35728,
       appendScriptTag: true,
       delay: 500,
-      ignore: '/node_modules/|/bower_components/|/server\/public\/dist/|/server\/public\/cdap_dist/|/server\/public\/common_dist/|/lib/',
+      ignore: '/node_modules/|/bower_components/|/packaged\/public\/dist/|/packaged\/public\/cdap_dist/|/packaged\/public\/common_dist/|/lib/',
     })
   );
 }
@@ -213,7 +217,7 @@ var webpackConfig = {
   output: {
     filename: '[name].[chunkhash].js',
     chunkFilename: '[name].[chunkhash].js',
-    path: __dirname + '/server/public/cdap_dist/cdap_assets/',
+    path: __dirname + '/packaged/public/cdap_dist/cdap_assets/',
     publicPath: '/cdap_assets/',
   },
   stats: {

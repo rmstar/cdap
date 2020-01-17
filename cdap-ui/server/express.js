@@ -31,11 +31,12 @@ const urlhelper = require('server/url-helper'),
   log4js = require('log4js'),
   bodyParser = require('body-parser'),
   ejs = require('ejs'),
-  DLL_PATH = path.normalize(__dirname + '/public/dll'),
-  DIST_PATH = path.normalize(__dirname + '/public/dist'),
-  LOGIN_DIST_PATH = path.normalize(__dirname + '/public/login_dist'),
-  CDAP_DIST_PATH = path.normalize(__dirname + '/public/cdap_dist'),
-  MARKET_DIST_PATH = path.normalize(__dirname + '/public/common_dist'),
+  DLL_PATH = path.normalize(__dirname + '/../public/dll'),
+  DIST_PATH = path.normalize(__dirname + '/../public/dist'),
+  LOGIN_DIST_PATH = path.normalize(__dirname + '/../public/login_dist'),
+  CDAP_DIST_PATH = path.normalize(__dirname + '/../public/cdap_dist'),
+  MARKET_DIST_PATH = path.normalize(__dirname + '/../public/common_dist'),
+  CONFIG_PATH = path.normalize(__dirname + '/server/config'),
   fs = require('fs'),
   hsts = require('hsts'),
   uiThemeWrapper = require('server/uiThemeWrapper'),
@@ -83,6 +84,7 @@ function makeApp(authAddress, cdapConfig, uiSettings) {
     // We can ignore this as the extract theme takes care of it.
   }
   const faviconPath = uiThemeWrapper.getFaviconPath(uiThemeConfig);
+
   // middleware
   try {
     app.use(serveFavicon(faviconPath));
@@ -179,7 +181,8 @@ function makeApp(authAddress, cdapConfig, uiSettings) {
   });
 
   app.get('/ui-config.js', function(req, res) {
-    var path = __dirname + '/config/cdap-ui-config.json';
+    // var path = __dirname + '/config/cdap-ui-config.json';
+    var path = CONFIG_PATH + '/cdap-ui-config.json';
 
     var fileConfig = {};
 

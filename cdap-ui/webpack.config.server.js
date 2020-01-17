@@ -20,7 +20,7 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 var path = require('path');
 
 let cleanOptions = {
-  verbose: true,
+  verbose: false,
   dry: false,
 };
 
@@ -32,16 +32,16 @@ var webpackConfig = {
   },
   output: {
     filename: 'index.js',
-    path: __dirname + '/server_dist_test/',
-    publicPath: '/server_dist_test/',
+    path: __dirname + '/packaged/server_dist/',
+    publicPath: '/packaged/server_dist/',
   },
   plugins: [
     new CleanWebpackPlugin(cleanOptions),
     new CaseSensitivePathsPlugin(),
     new CopyWebpackPlugin([
       {
-        from: './graphql',
-        to: './graphql',
+        from: './graphql/schema',
+        to: './graphql/schema',
       },
       {
         from: './server/config/**/*.json',
@@ -64,16 +64,19 @@ var webpackConfig = {
         exclude: [/node_modules/, /lib/],
         include: [path.join(__dirname, 'server'), path.join(__dirname, 'graphql')],
       },
+      {
+        test: /\.(graphql|gql)$/,
+        exclude: /node_modules/,
+        loader: 'graphql-tag/loader',
+      },
     ],
+  },
+  stats: {
+    warnings: false,
   },
   resolve: {
     extensions: ['.mjs', '.js'],
     alias: {
-      // components: __dirname + '/app/cdap/components',
-      // services: __dirname + '/app/cdap/services',
-      // api: __dirname + '/app/cdap/api',
-      // lib: __dirname + '/app/lib',
-      // styles: __dirname + '/app/cdap/styles',
       server: __dirname + '/server',
       gql: __dirname + '/graphql',
     },
