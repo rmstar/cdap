@@ -314,9 +314,9 @@
                     <copy todir = "${stage.opt.dir}/cdap-ui-upgrade">
                       <fileset dir = "cdap-ui-upgrade" />
                     </copy>
-                    <copy todir = "${stage.opt.dir}/server/config/themes">
+                    <!-- <copy todir = "${stage.opt.dir}/server/config/themes">
                       <fileset dir = "server/config/themes" />
-                    </copy>
+                    </copy> -->
                     <!-- <copy todir = "${stage.opt.dir}/graphql">
                       <fileset dir = "graphql" />
                     </copy> -->
